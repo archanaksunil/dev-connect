@@ -1,4 +1,5 @@
 const moongose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new moongose.Schema({
     firstName: {
@@ -19,11 +20,21 @@ const userSchema = new moongose.Schema({
         lowercase: true,
         trim: true,
         minLength: 7,
-        maxLength: 50
+        maxLength: 50,
+        validate(value) {
+            if(!validator.isEmail(value)) {
+                throw new Error("Invalid email " + value)
+            }
+        }
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        validate(value) {
+            if(!validator.isStrongPassword(value)) {
+                throw new Error("Not strong password " + value)
+            }
+        }
     },
     age: {
         type: Number,
@@ -36,12 +47,20 @@ const userSchema = new moongose.Schema({
             if(!["male", "female", "other"].includes(value)) throw new Error("Gender not valid");
         }
     },
+    about: {
+        type: String
+    },
     skills: {
         type: [String]
     },
     photoUrl: {
         type: String,
-        default: "https://avatar.iran.liara.run/public/boy?username=Ash"
+        default: "https://avatar.iran.liara.run/public/boy?username=Ash",
+        validate(value) {
+            if(!validator.isURL(value)) {
+                throw new Error("Invalid Photo URL " + value)
+            }
+        }
     }
 }, 
 {
