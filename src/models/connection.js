@@ -5,10 +5,12 @@ const connectionSchema = new moongose.Schema(
     fromUserId: {
       type: moongose.Schema.Types.ObjectId,
       required: true,
+      ref: "User"
     },
     toUserId: {
       type: moongose.Schema.Types.ObjectId,
       required: true,
+      ref: "User"
     },
     status: {
       type: String,
