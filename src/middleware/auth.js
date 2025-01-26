@@ -4,7 +4,10 @@ const json = require("jsonwebtoken");
 const userAuth = async (req, res, next) => {
   try {
     const { token } = req.cookies;
-    if (!token) throw new Error("Invalid token");
+    if (!token) {
+      res.status(401).send("Please login");
+      return;
+    }
     const { _id } = await json.verify(token, "devConnectSecret");
     if (!_id) throw new Error("token expired");
     const user = await User.findById(_id);
