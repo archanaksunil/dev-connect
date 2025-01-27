@@ -5,7 +5,7 @@ const User = require("../models/user");
 
 const userRouter = express.Router();
 
-const USER_SAFE_DATA = "firstName lastName about age gender photoUrl";
+const USER_SAFE_DATA = "firstName lastName about age gender photoUrl skills";
 
 userRouter.get("/user/request", userAuth, async (req, res) => {
   try {
@@ -14,7 +14,11 @@ userRouter.get("/user/request", userAuth, async (req, res) => {
       toUserId: user._id,
       status: "interested",
     }).populate("fromUserId", USER_SAFE_DATA);
-    const data = requests.map((req) => req.fromUserId);
+    let data = requests.map((req) => {
+      const user = req.fromUserId.toObject();
+      user._id = req._id;
+      return user;
+    });
     res.json({ message: "Got Request received successfully", data });
   } catch (err) {
     res.status(400).send({ error: err.message });
