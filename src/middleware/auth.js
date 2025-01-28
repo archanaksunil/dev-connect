@@ -8,7 +8,7 @@ const userAuth = async (req, res, next) => {
       res.status(401).send("Please login");
       return;
     }
-    const { _id } = await json.verify(token, "devConnectSecret");
+    const { _id } = await json.verify(token, process.env.JWT_SECRET);
     if (!_id) throw new Error("token expired");
     const user = await User.findById(_id);
     if(!user) throw new Error("user doesn't exist");
